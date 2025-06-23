@@ -23,15 +23,16 @@ def polarity_scores_roberta(example):
 
     encoded_text = tokenizer(example, return_tensors='pt')
     output = model(**encoded_text)
-    scores = output[0][0].detach().numpy()
+    # scores = output[0][0].detach().numpy()
+    scores = output[0][0].detach().cpu().numpy()
     scores = softmax(scores)
     scores_dict = {
         # 'roberta_neg' : scores[0],
         # 'roberta_neu' : scores[1],
         # 'roberta_pos' : scores[2]
-        'negative': float(scores[0]),
-        'neutral': float(scores[1]),
-        'positive': float(scores[2])
+        'Negative': round(float(scores[0]) * 100, 2),
+        'Neutral': round(float(scores[1]) * 100, 2),
+        'Positive': round(float(scores[2]) * 100, 2),
     }
     return scores_dict
 
